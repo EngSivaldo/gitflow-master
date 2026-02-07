@@ -32,3 +32,13 @@ jobs:
           python -m py_compile run.py
           # Verifica a pasta app recursivamente
           python -m compileall app/
+      # ... (mantenha os passos anteriores)
+      - name: Deploy automático no PythonAnywhere
+        if: github.ref == 'refs/heads/main' # Só faz deploy se for a branch main
+        env:
+          PA_API_TOKEN: ${{ secrets.PA_API_TOKEN }}
+          PA_USERNAME: ${{ secrets.PA_USERNAME }}
+        run: |
+          # Este comando avisa o PythonAnywhere para dar um git pull e fazer o reload
+          curl -X POST "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/webapps/almeida.pythonanywhere.com/reload/" \
+            -H "Authorization: Token $PA_API_TOKEN"
