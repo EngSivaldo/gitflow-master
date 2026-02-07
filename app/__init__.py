@@ -3,7 +3,7 @@ from flask_login import LoginManager
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui'
+    app.config['SECRET_KEY'] = '085f29096ff4b6c2f89e06c8e052b6e1'
 
     login_manager = LoginManager()
     login_manager.init_app(app)
