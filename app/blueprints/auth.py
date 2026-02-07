@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import login_user, logout_user, login_required
+from app.models import User
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -9,13 +11,14 @@ def login():
         password = request.form.get('password')
         
         if username == 'admin' and password == '123':
-            # Em vez de retornar texto, redirecionamos para o Dashboard
-            return redirect(url_for('web.index')) 
-        else:
-            return "<h1>Erro!</h1><a href='/login'>Tentar novamente</a>"
+            user = User("1", "admin")
+            login_user(user) # <--- O Flask agora lembra de você!
+            return redirect(url_for('web.index'))
             
     return render_template('auth/login.html')
 
 @auth_bp.route('/logout')
+@login_required
 def logout():
+    logout_user()
     return redirect(url_for('auth.login'))
