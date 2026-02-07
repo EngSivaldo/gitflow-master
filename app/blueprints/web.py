@@ -1,6 +1,11 @@
 from flask import Blueprint, render_template, abort
 # No topo do arquivo run.py, adicione o import:
 from app.erros_git import ERROS_COMUNS
+from flask import Blueprint, render_template, request 
+from app.logica_simulador import processar_comando # Importe a nova lógica
+
+
+
 web_bp = Blueprint('web', __name__)
 
 # Este dicionário funciona como um "Banco de Dados" temporário.
@@ -112,3 +117,17 @@ def glossario_erros():
 @web_bp.route('/glossario')
 def glossario():
     return render_template('glossario.html', erros=ERROS_COMUNS)
+
+
+
+# ... (rota do glossário e outras)
+
+@web_bp.route('/simulador', methods=['GET', 'POST'])
+def simulador():
+    resultado = None
+    comando_digitado = ""
+    if request.method == 'POST':
+        comando_digitado = request.form.get('comando')
+        resultado = processar_comando(comando_digitado)
+    
+    return render_template('simulador.html', resultado=resultado, comando=comando_digitado)

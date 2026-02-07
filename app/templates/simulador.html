@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-green-400 font-mono">> git_simulador --start</h1>
+    
+    <div class="bg-gray-900 border border-gray-700 rounded-lg p-6 shadow-xl">
+        <form method="POST" class="space-y-4">
+            <div>
+                <label class="block text-gray-400 text-sm mb-2 font-mono">Digite um comando git:</label>
+                <input type="text" name="comando" value="{{ comando }}" 
+                       class="w-full bg-black border border-gray-600 rounded p-3 text-green-500 font-mono focus:border-green-500 outline-none"
+                       placeholder="ex: git init" required>
+            </div>
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors">
+                Executar Comando
+            </button>
+        </form>
+
+        {% if resultado %}
+        <div class="mt-8 p-4 bg-gray-800 border-l-4 border-green-500 rounded">
+            <p class="text-gray-300 font-mono">{{ resultado }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
