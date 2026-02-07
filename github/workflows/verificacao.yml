@@ -1,44 +1,61 @@
-name: CI de Verificação - GitFlow Master
+# Nome do Workflow que aparece na aba Actions do GitHub
+name: CI/CD de Verificação e Deploy - GitFlow Master
 
+# Define quando a automação será executada
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop] # Roda ao enviar código para main ou develop
   pull_request:
-    branches: [main]
+    branches: [main] # Roda ao abrir um pedido de mesclagem para a main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-and-deploy:
+    runs-on: ubuntu-latest # Usa a versão mais recente do Ubuntu no servidor do GitHub
 
     steps:
-      - uses: actions/checkout@v3
+      # 1. FAZ O DOWNLOAD DO CÓDIGO
+      # Baixa os arquivos do seu repositório para a máquina de testes do GitHub
+      - name: Checkout do Código
+        uses: actions/checkout@v3
 
-      - name: Configurar Python
+      # 2. CONFIGURA O AMBIENTE
+      # Instala o Python 3.11 para garantir compatibilidade com o PythonAnywhere
+      - name: Configurar Python 3.11
         uses: actions/setup-python@v4
         with:
-          # Alterado para 3.11 para alinhar com o seu deploy no PythonAnywhere
           python-version: "3.11"
 
+      # 3. INSTALA AS DEPENDÊNCIAS
+      # Atualiza o pip e instala o Flask, Gunicorn e o que estiver no seu requirements.txt
       - name: Instalar Dependências
         run: |
           python -m pip install --upgrade pip
-          # Garante que as dependências base existam mesmo se o requirements estiver incompleto
           pip install flask gunicorn 
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      # 4. TESTE DE SINTAXE (LINT)
+      # Verifica se você esqueceu alguma vírgula ou se há erros que impediriam o app de abrir
       - name: Verificação de Sintaxe (Lint)
         run: |
-          # Adicionei o caminho completo para evitar erro de 'file not found'
           python -m py_compile run.py
-          # Verifica a pasta app recursivamente
           python -m compileall app/
-      # ... (mantenha os passos anteriores)
-      - name: Deploy automático no PythonAnywhere
-        if: github.ref == 'refs/heads/main' # Só faz deploy se for a branch main
+
+      # 5. DEPLOY AUTOMÁTICO (CONTINUOUS DEPLOYMENT)
+      # Esta parte só roda se os testes acima passarem E se o código estiver na branch MAIN
+      - name: Deploy no PythonAnywhere
+        if: github.ref == 'refs/heads/main'
         env:
+          # Usa as chaves secretas que você configurou no GitHub (Secrets)
           PA_API_TOKEN: ${{ secrets.PA_API_TOKEN }}
           PA_USERNAME: ${{ secrets.PA_USERNAME }}
         run: |
-          # Este comando avisa o PythonAnywhere para dar um git pull e fazer o reload
-          curl -X POST "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/webapps/almeida.pythonanywhere.com/reload/" \
+          # A) COMANDO DE PULL: Abre um console temporário no servidor e puxa o código novo
+          # Isso substitui o passo de você ter que ir no console bash manualmente
+          curl -X POST "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/consoles/" \
+            -H "Authorization: Token $PA_API_TOKEN" \
+            --data "executable=bash&arguments=-c 'cd ~/gitflow-master && git pull origin main'"
+
+          # B) COMANDO DE RELOAD: Reinicia o servidor Web
+          # Isso substitui o clique no botão verde da aba 'Web'
+          curl -X POST "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/webapps/$PA_USERNAME.pythonanywhere.com/reload/" \
             -H "Authorization: Token $PA_API_TOKEN"
