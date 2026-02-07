@@ -60,6 +60,18 @@
         {% block content %}{% endblock %}
     </main>
 
+    <script>
+      function copyToClipboard(elementId) {
+          const text = document.getElementById(elementId).innerText.replace('$', '').trim();
+          navigator.clipboard.writeText(text).then(() => {
+              const btn = document.querySelector(`[onclick="copyToClipboard('${elementId}')"]`);
+              const originalHTML = btn.innerHTML;
+              btn.innerHTML = '<i class="fas fa-check text-green-500"></i>';
+              setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+          });
+      }
+      </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 </body>
 </html>
