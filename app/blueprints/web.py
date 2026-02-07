@@ -1,32 +1,83 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
 
 web_bp = Blueprint('web', __name__)
 
+# Este dicionário funciona como um "Banco de Dados" temporário.
+# Centralizar o conteúdo aqui facilita a manutenção.
+CONTEUDO_ESTAGIOS = {
+    1: {
+        "id": 1,
+        "titulo": "Clone & Setup",
+        "subtitulo": "Trazendo o projeto para sua máquina",
+        "cor": "blue",
+        "icone": "fa-download",
+        "explicacao": "O clone cria uma cópia local do repositório remoto. Como sênior, lembre-se: clone uma vez, atualize sempre (git pull).",
+        "comandos": ["git clone <url>", "python -m venv venv", "pip install -r requirements.txt"],
+        "dica_senior": "Nunca esqueça o .gitignore. Subir a pasta venv é um erro clássico de quem está começando."
+    },
+    2: {
+        "id": 2,
+        "titulo": "Feature Branches",
+        "subtitulo": "Trabalhando de forma isolada",
+        "cor": "indigo",
+        "icone": "fa-code-branch",
+        "explicacao": "Branches permitem que você desenvolva novas funcionalidades sem afetar o código principal estável.",
+        "comandos": ["git checkout -b feature/nome-tarefa", "git status", "git add ."],
+        "dica_senior": "Dê nomes claros às suas branches, como 'feature/login-social' em vez de 'feature/teste'."
+    },
+    3: {
+        "id": 3,
+        "titulo": "PR & Review",
+        "subtitulo": "Qualidade em primeiro lugar",
+        "cor": "purple",
+        "icone": "fa-eye",
+        "explicacao": "O Pull Request é onde o time revisa seu código. É a melhor escola para um desenvolvedor júnior.",
+        "comandos": ["git push origin feature/nome", "Abrir PR no GitHub", "Revisar comentários"],
+        "dica_senior": "Um PR pequeno é revisado rápido. Um PR com 50 arquivos alterados é o pesadelo do revisor."
+    },
+    4: {
+        "id": 4,
+        "titulo": "Merge Conflicts",
+        "subtitulo": "Resolvendo divergências",
+        "cor": "orange",
+        "icone": "fa-exclamation-triangle",
+        "explicacao": "Conflitos ocorrem quando dois devs alteram a mesma linha. É um processo manual de decisão.",
+        "comandos": ["git pull origin develop", "Aceitar alterações", "git commit"],
+        "dica_senior": "Conflitos não são erros, são apenas o Git pedindo uma decisão humana."
+    },
+    5: {
+        "id": 5,
+        "titulo": "CI/CD Pipeline",
+        "subtitulo": "Automação no Google Cloud",
+        "cor": "green",
+        "icone": "fa-rocket",
+        "explicacao": "CI/CD garante que o código passe por testes antes de chegar no servidor de produção.",
+        "comandos": ["git push", "Check GitHub Actions", "Deploy automático"],
+        "dica_senior": "Confie nos seus testes. Se o CI falhou, o problema é real e precisa ser corrigido antes do merge."
+    }
+}
+
 @web_bp.route('/')
 def index():
-    # Dados das lições incluindo CI/CD
-    estagios = [
-        {"id": 1, "titulo": "Clone & Setup", "icone": "fa-download"},
-        {"id": 2, "titulo": "Feature Branches", "icone": "fa-code-branch"},
-        {"id": 3, "titulo": "PR & Review", "icone": "fa-eye"},
-        {"id": 4, "titulo": "Merge Conflicts", "icone": "fa-exclamation-triangle"},
-        {"id": 5, "titulo": "CI/CD Pipeline", "icone": "fa-rocket"}
-    ]
-    return render_template('index.html', estagios=estagios)
+    # Passamos apenas os valores do dicionário para o template
+    return render_template('index.html', estagios=CONTEUDO_ESTAGIOS.values())
 
-@web_bp.route('/estagio/5')
-def cicd():
-    return render_template('modulos/cicd.html')
-  
-  
+@web_bp.route('/estagio/<int:id>')
+def detalhe_estagio(id):
+    # Rota dinâmica: busca no dicionário pelo ID passado na URL
+    item = CONTEUDO_ESTAGIOS.get(id)
+    if not item:
+        abort(404)  # Se o ID não existir, mostra erro 404
+    return render_template('detalhe_estagio.html', item=item)
+
 @web_bp.route('/fluxo-git')
 def fluxo_git():
-    # Definindo a hierarquia de branches para a aula
+    # Mantemos esta rota separada pois é uma página de referência visual
     workflow = [
-        {"branch": "main", "cor": "bg-red-600", "status": "Produção", "desc": "Código estável e pronto para o usuário final."},
-        {"branch": "develop", "cor": "bg-yellow-500", "status": "Desenvolvimento", "desc": "Integração de novas funcionalidades testadas."},
-        {"branch": "feature/*", "cor": "bg-blue-500", "status": "Novas Funcionalidades", "desc": "Trabalho isolado para cada tarefa do time."},
-        {"branch": "release/*", "cor": "bg-green-500", "status": "Preparação", "desc": "Ajustes finos antes de subir para a main."},
-        {"branch": "hotfix/*", "cor": "bg-purple-600", "status": "Correção Urgente", "desc": "Reparo imediato em produção."}
+        {"branch": "main", "cor": "bg-red-600", "status": "Produção", "desc": "Código estável."},
+        {"branch": "develop", "cor": "bg-yellow-500", "status": "Desenvolvimento", "desc": "Integração de código."},
+        {"branch": "feature/*", "cor": "bg-blue-500", "status": "Novas Funcionalidades", "desc": "Trabalho isolado."},
+        {"branch": "release/*", "cor": "bg-green-500", "status": "Preparação", "desc": "Ajustes de versão."},
+        {"branch": "hotfix/*", "cor": "bg-purple-600", "status": "Correção Urgente", "desc": "Reparo imediato."}
     ]
     return render_template('modulos/fluxo.html', workflow=workflow)

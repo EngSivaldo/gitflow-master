@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <a href="/" class="text-blue-500 hover:underline mb-6 inline-block font-semibold">&larr; Voltar ao Dashboard</a>
+    
+    <div class="bg-gray-800 border border-gray-700 rounded-2xl p-8 shadow-2xl">
+        <div class="flex items-center space-x-4 mb-6">
+            <div class="w-16 h-16 bg-{{ item.cor }}-600/20 rounded-2xl flex items-center justify-center">
+                <i class="fas {{ item.icone }} text-3xl text-{{ item.cor }}-500"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold">{{ item.titulo }}</h1>
+                <p class="text-gray-400">{{ item.subtitulo }}</p>
+            </div>
+        </div>
+
+        <div class="prose prose-invert max-w-none">
+            <p class="text-lg text-gray-300 leading-relaxed mb-8">{{ item.explicacao }}</p>
+            
+            <h3 class="text-xl font-bold mb-4 text-white">Comandos Essenciais:</h3>
+            <div class="bg-black rounded-lg p-5 font-mono text-sm text-green-400 mb-8 border border-gray-700">
+                {% for cmd in item.comandos %}
+                <p class="mb-2"><span class="text-gray-500">$</span> {{ cmd }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="bg-{{ item.cor }}-900/20 border-l-4 border-{{ item.cor }}-500 p-6 rounded-r-lg">
+                <h4 class="text-{{ item.cor }}-400 font-bold mb-2 uppercase text-xs">Papo de Sênior</h4>
+                <p class="text-gray-300 italic">"{{ item.dica_senior }}"</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
