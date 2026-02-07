@@ -7,6 +7,41 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+
+    <style>
+      /* Container com altura fixa para evitar espaços vazios gigantes */
+      .mermaid-container {
+          width: 100%;
+          max-width: 700px;
+          height: 350px; /* Altura fixa para todos os estágios */
+          margin: 0 auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: rgba(17, 24, 39, 0.3);
+          border-radius: 1rem;
+          border: 1px solid rgba(75, 85, 99, 0.3);
+          padding: 1rem;
+          overflow: hidden; /* Corta o que sobrar das bordas */
+      }
+  
+      /* Força o SVG do Mermaid a se comportar dentro do container */
+      .mermaid svg {
+          max-width: 100% !important;
+          max-height: 100% !important;
+          width: auto !important;
+          height: auto !important;
+      }
+  
+      /* Limpa o fundo cinza das labels que aparecem nas suas fotos */
+      .edgeLabel {
+          background-color: #1f2937 !important;
+          padding: 0 5px !important;
+          border-radius: 4px;
+          color: #9ca3af !important;
+      }
+  </style>
+</style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
     

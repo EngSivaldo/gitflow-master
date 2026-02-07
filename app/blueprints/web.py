@@ -81,3 +81,24 @@ def fluxo_git():
         {"branch": "hotfix/*", "cor": "bg-purple-600", "status": "Correção Urgente", "desc": "Reparo imediato."}
     ]
     return render_template('modulos/fluxo.html', workflow=workflow)
+  
+@web_bp.route('/socorro')
+def glossario_erros():
+    erros = [
+        {
+            "erro": "Commit na branch errada",
+            "solucao": "Use 'git reset HEAD~1 --soft' para desfazer o commit mas manter o código, mude de branch e commite novamente.",
+            "nivel_desespero": "Baixo"
+        },
+        {
+            "erro": "Esqueci de uma alteração no último commit",
+            "solucao": "Adicione o arquivo com 'git add' e use 'git commit --amend --no-edit'. Isso 'remenda' o commit anterior.",
+            "nivel_desespero": "Médio"
+        },
+        {
+            "erro": "Entrei no editor Vim por engano e não sei sair",
+            "solucao": "Aperte 'ESC', digite ':q!' e dê 'Enter' para sair sem salvar.",
+            "nivel_desespero": "Alto (para iniciantes)"
+        }
+    ]
+    return render_template('modulos/socorro.html', erros=erros)

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-10">
+        <h1 class="text-4xl font-black text-red-500 mb-2 italic">CALMA! 🧘‍♂️</h1>
+        <p class="text-gray-400">Errar no Git é normal. Quase tudo pode ser desfeito antes de você enviar para o servidor.</p>
+    </div>
+
+    <div class="grid gap-6">
+        {% for item in erros %}
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-red-500/50 transition-colors">
+            <h3 class="text-xl font-bold text-white flex items-center">
+                <span class="w-3 h-3 bg-red-600 rounded-full mr-3"></span>
+                {{ item.erro }}
+            </h3>
+            <div class="mt-4 p-4 bg-black/50 rounded-lg">
+                <p class="text-green-400 font-mono text-sm leading-relaxed">
+                    <span class="text-gray-500"># Solução:</span><br>
+                    {{ item.solucao }}
+                </p>
+            </div>
+            <p class="mt-3 text-xs uppercase tracking-widest text-gray-500 font-bold">Nível de desespero: {{ item.nivel_desespero }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
