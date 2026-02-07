@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-10">
+    <a href="/" class="text-blue-400 hover:text-blue-300 transition-colors">&larr; Voltar ao Dashboard</a>
+    <h1 class="text-4xl font-extrabold mt-4">Glossário de Erros de Sobrevivência</h1>
+    <p class="text-gray-400 mt-2">Guia rápido para quando o Git decidir testar sua paciência.</p>
+</div>
+
+<div class="space-y-6">
+    {% for erro in erros %}
+    <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-red-500/50 transition-all">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-bold text-red-400">{{ erro.titulo }}</h2>
+            <span class="text-xs font-mono bg-gray-900 px-2 py-1 rounded border border-gray-700 text-gray-500">Erro #{{ erro.id }}</span>
+        </div>
+        
+        <p class="text-gray-300 mb-4">{{ erro.descricao }}</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-black/40 p-3 rounded-lg border border-gray-700">
+                <span class="text-xs uppercase font-bold text-gray-500 block mb-1">Como identificar:</span>
+                <p class="text-sm italic text-gray-400">"{{ erro.sinal }}"</p>
+            </div>
+            <div class="bg-blue-900/10 p-3 rounded-lg border border-blue-900/30">
+                <span class="text-xs uppercase font-bold text-blue-400 block mb-1">A Solução Sênior:</span>
+                <p class="text-sm text-blue-200">{{ erro.solucao }}</p>
+            </div>
+        </div>
+        
+        <div class="mt-4 flex items-center space-x-2 text-sm">
+            <span class="text-gray-500 italic">Comando útil:</span>
+            <code class="bg-gray-900 text-green-400 px-2 py-1 rounded">{{ erro.comando }}</code>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

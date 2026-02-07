@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, abort
-
+# No topo do arquivo run.py, adicione o import:
+from app.erros_git import ERROS_COMUNS
 web_bp = Blueprint('web', __name__)
 
 # Este dicionário funciona como um "Banco de Dados" temporário.
@@ -102,3 +103,12 @@ def glossario_erros():
         }
     ]
     return render_template('modulos/socorro.html', erros=erros)
+
+
+
+
+# ... (outras rotas)
+
+@web_bp.route('/glossario')
+def glossario():
+    return render_template('glossario.html', erros=ERROS_COMUNS)
