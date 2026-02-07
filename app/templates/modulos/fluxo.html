@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold mb-8 flex items-center">
+        <i class="fas fa-code-branch mr-3 text-blue-500"></i> Padronização de Branches
+    </h2>
+
+    <div class="space-y-4">
+        {% for item in workflow %}
+        <div class="flex items-center p-4 bg-gray-800 border-l-4 {{ item.cor | replace('bg-', 'border-') }} rounded-r-lg shadow-lg transform hover:scale-[1.02] transition-transform">
+            <div class="flex-1">
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1 text-xs font-mono font-bold rounded {{ item.cor }} text-white uppercase">
+                        {{ item.branch }}
+                    </span>
+                    <span class="text-gray-400 text-sm font-semibold">| {{ item.status }}</span>
+                </div>
+                <p class="mt-2 text-gray-300">{{ item.desc }}</p>
+            </div>
+            <div class="text-gray-600">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-10 p-6 bg-blue-900/10 border border-blue-500/30 rounded-xl">
+        <h4 class="text-blue-400 font-bold mb-2 uppercase text-xs tracking-widest">Dica de Sênior</h4>
+        <p class="text-sm italic text-gray-400">
+            "Nunca faça merge de uma feature direto na main. O caminho sempre deve ser: Feature → Develop → Release → Main. Isso protege o produto e o sono da equipe."
+        </p>
+    </div>
+</div>
+{% endblock %}
