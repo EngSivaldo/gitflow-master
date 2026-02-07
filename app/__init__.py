@@ -1,21 +1,23 @@
 from flask import Flask
-from flask_login import LoginManager # <--- Adicione
-from app.blueprints.web import web_bp
-from app.blueprints.auth import auth_bp
+from flask_login import LoginManager
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui' # Necessário para sessões
+    app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui'
 
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = 'auth.login' # Onde mandar quem não está logado
+    login_manager.login_view = 'auth.login'
 
-    # Simulação de carregamento de usuário para o Sênior
+    # Importações dentro da função para evitar erros de inicialização
+    from app.models import User
+
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models import User # Criaremos este modelo simples
         return User.get(user_id)
+
+    from app.blueprints.web import web_bp
+    from app.blueprints.auth import auth_bp
 
     app.register_blueprint(web_bp)
     app.register_blueprint(auth_bp)
